@@ -1,0 +1,57 @@
+[
+  {
+    "avatar_id": "nik_expressive_20240910",
+    "avatar_name": "Nik in Black Shirt",
+    "gender": "male",
+    "preview_image_url": "https://files2.heygen.ai/avatar/v3/Nik_Black_3_0_20240910/preview_target.webp",
+    "preview_video_url": "https://files2.heygen.ai/avatar/v3/Nik_Black_3_0_20240910/preview_video_target.mp4",
+    "premium": false,
+    "type": null,
+    "tags": null,
+    "default_voice_id": null
+  },
+  {
+    "avatar_id": "nik_blue_expressive_20240910",
+    "avatar_name": "Nik in Blue Sweater",
+    "gender": "male",
+    "preview_image_url": "https://files2.heygen.ai/avatar/v3/Nik_Blue_3_0_20240910/preview_target.webp",
+    "preview_video_url": "https://files2.heygen.ai/avatar/v3/Nik_Blue_3_0_20240910/preview_video_target.mp4",
+    "premium": false,
+    "type": null,
+    "tags": null,
+    "default_voice_id": null
+  },
+  {
+    "avatar_id": "Tyler-incasualsuit-20220721",
+    "avatar_name": "Tyler in Casual Suit",
+    "gender": "male",
+    "preview_image_url": "https://files2.heygen.ai/avatar/v3/79b245561ad448e796b7e77cd2773d0b_14263/preview_talk_11.webp",
+    "preview_video_url": "https://files2.heygen.ai/avatar/v3/79b245561ad448e796b7e77cd2773d0b_14263/preview_video_talk_11.mp4",
+    "premium": false,
+    "type": null,
+    "tags": null,
+    "default_voice_id": null
+  },
+  {
+    "avatar_id": "Tyler-inshirt-20220721",
+    "avatar_name": "Tyler in Shirt",
+    "gender": "male",
+    "preview_image_url": "https://files2.heygen.ai/avatar/v3/79b245561ad448e796b7e77cd2773d0b_14263/preview_talk_2.webp",
+    "preview_video_url": "https://files2.heygen.ai/avatar/v3/79b245561ad448e796b7e77cd2773d0b_14263/preview_video_talk_2.mp4",
+    "premium": false,
+    "type": null,
+    "tags": null,
+    "default_voice_id": null
+  },
+  {
+    "avatar_id": "Tyler-insuit-20220721",
+    "avatar_name": "Tyler in Suit",
+    "gender": "male",
+    "preview_image_url": "https://files2.heygen.ai/avatar/v3/79b245561ad448e796b7e77cd2773d0b_14263/preview_talk_5.webp",
+    "preview_video_url": "https://files2.heygen.ai/avatar/v3/79b245561ad448e796b7e77cd2773d0b_14263/preview_video_talk_5.mp4",
+    "premium": false,
+    "type": null,
+    "tags": null,
+    "default_voice_id": null
+  }
+]
