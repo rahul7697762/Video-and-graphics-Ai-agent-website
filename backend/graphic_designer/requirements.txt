@@ -1,0 +1,22 @@
+# Core
+fastapi==0.109.0
+uvicorn==0.27.0
+python-dotenv==1.0.1
+pydantic==2.6.0
+
+# Google AI
+google-cloud-aiplatform==1.38.0
+google-generativeai==0.8.0
+google-cloud-storage==2.14.0
+
+# Image Processing
+Pillow==10.2.0
+
+# File locking for thread-safe DB
+filelock==3.13.1
+
+# Form handling
+python-multipart==0.0.6
+
+# HTTP client (for future use)
+httpx==0.27.0

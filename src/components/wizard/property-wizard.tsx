@@ -145,25 +145,13 @@ export default function PropertyWizard({ forcedCategory, allowedCategories }: { 
             };
 
             if (formData.category === 'Video Edit') {
+
                 endpoint = '/api/creatomate/generate';
-                // Construct modifications based on template
-                const modifications = {
-                    "fill_color": "#ffffff",
-                    "Video-8P2.source": formData.mediaUrls['mainVideo'],
-                    "Video-8P2.duration": "media",
-                    "logo.source": formData.mediaUrls['mainImage'],
-                    "logo.duration": null,
-                    "Shape-R4V.duration": null,
-                    "price-text.text": `${formData.propertyType || ''} from ${formData.priceLabel || ''}\nLimited Units`,
-                    "price-text.duration": null,
-                    "Text-R85.duration": null,
-                    "Text-V22.text": `📍 ${formData.locality || ''} - ${formData.city || ''}`,
-                    "Text-V22.duration": null,
-                    "Text-V22.fill_color": "rgba(255,255,255,1)"
-                };
+                // New Dynamic Flow: Send raw data and let backend map it using the template
                 payload = {
                     propertyId: property.id,
-                    modifications
+                    templateId: 'standard', // Maps to src/lib/creatomate/templates/standard.json
+                    data: formData
                 };
             }
 

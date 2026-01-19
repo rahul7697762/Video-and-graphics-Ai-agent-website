@@ -1,7 +1,6 @@
-
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
-import { videoTemplate } from './template';
+import { TemplateManager } from '@/lib/creatomate/template-manager';
 
 export async function POST(req: Request) {
     const supabase = createClient();
@@ -13,10 +12,38 @@ export async function POST(req: Request) {
 
     try {
         const body = await req.json();
-        const { modifications, propertyId } = body;
+        let { modifications, propertyId, templateId, data: templateData } = body;
 
-        const apiKey = 'cd3c32746bf2461caa3b411b77263cf9386411e60c6a56974dc25a984ad50872b4486f3e706d31d2ff3e3147e56aa662';
-        const templateId = '6ac80fd5-c928-4640-ac1c-c3a0bafac3c5';
+        // Dynamic Template Logic
+        if (templateId) {
+            const manager = new TemplateManager();
+            const template = manager.getTemplate(templateId);
+
+            if (!template) {
+                return NextResponse.json({ error: `Template '${templateId}' not found` }, { status: 404 });
+            }
+
+            // Apply template mapping
+            modifications = manager.applyTemplate(template, templateData || {});
+
+            // Also override the actual Creatomate Template ID from the config
+            // Note: In strict mode, we might want to separate the 'Registry ID' from 'Creatomate ID'
+            // For now, let's assume the config has the correct ID.
+        }
+
+        const apiKey = process.env.CREATOMATE_API_KEY;
+        if (!apiKey) throw new Error("Missing CREATOMATE_API_KEY");
+
+        // Default ID if not dynamic, OR overridden by template config if we loaded one 
+        // We need to fetch the ID from the template config if available
+        let creatomateTemplateId = '6ac80fd5-c928-4640-ac1c-c3a0bafac3c5'; // Default fallback
+
+        if (templateId) {
+            const manager = new TemplateManager();
+            const template = manager.getTemplate(templateId);
+            if (template?.id) creatomateTemplateId = template.id;
+        }
+
         const url = 'https://api.creatomate.com/v2/renders';
 
         // 1. Create Initial Video Record
@@ -24,17 +51,18 @@ export async function POST(req: Request) {
             user_id: user.id,
             property_id: propertyId,
             status: 'pending', // Creatomate is async
-            script_content: 'Creatomate Video Edit',
-            meta: { template: 'CREATOMATE_EDIT', modifications }
+            script_content: templateId ? `Template: ${templateId}` : 'Creatomate Video Edit',
+            meta: { template: 'CREATOMATE_EDIT', modifications, templateId }
         }).select().single();
 
         if (dbError) throw dbError;
 
         const data = {
-            template_id: templateId,
+            template_id: creatomateTemplateId,
             modifications: modifications,
             // Tagging for potential webhook correlation if needed later
-            metadata: JSON.stringify({ videoId: video.id, userId: user.id })
+            metadata: JSON.stringify({ videoId: video.id, userId: user.id }),
+            webhook_url: `${req.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL}/api/creatomate/webhook`
         };
 
         const maxRetries = 3;

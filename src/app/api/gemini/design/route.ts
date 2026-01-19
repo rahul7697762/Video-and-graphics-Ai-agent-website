@@ -5,19 +5,45 @@ export async function POST(req: Request) {
     try {
         const body = await req.json();
 
-        // Transform Request: Next.js Frontend -> Python Microservice
-        // Frontend sends: { mode: "structured", prompt: { category, details } }
-        // Python expects: { category, raw_input, aspectRatio }
+        console.log("Received request body:", JSON.stringify(body, null, 2));
 
-        const pythonPayload = {
-            category: body.prompt.category,
-            raw_input: body.prompt.details,
-            aspectRatio: "9:16" // Updated to 9:16 as requested
-        };
+        // Handle both formats:
+        // Format 1 (frontend): { mode: "structured", prompt: { category, details }, platform, style }
+        // Format 2 (direct): { category, raw_input, ... }
 
-        // Forward to Python Backend
-        // Assuming running on localhost:8000
-        const pythonUrl = "http://127.0.0.1:8000/generate-design";
+        let pythonPayload;
+
+        if (body.prompt) {
+            // Frontend format with prompt wrapper
+            pythonPayload = {
+                category: body.prompt.category || "ready-to-move",
+                raw_input: body.prompt.details || "",
+                aspectRatio: body.aspectRatio || "9:16",
+                platform: body.platform || "Instagram Story",
+                style: body.style || "modern"
+            };
+        } else {
+            // Direct format
+            pythonPayload = {
+                category: body.category || "ready-to-move",
+                raw_input: body.raw_input || body.details || "",
+                aspectRatio: body.aspectRatio || "9:16",
+                platform: body.platform || "Instagram Story",
+                style: body.style || "modern"
+            };
+        }
+
+        console.log("Python payload:", JSON.stringify(pythonPayload, null, 2));
+
+        // Validate required field
+        if (!pythonPayload.raw_input) {
+            return NextResponse.json(
+                { error: "Property details (raw_input) is required" },
+                { status: 400 }
+            );
+        }
+
+        const pythonUrl = "http://127.0.0.1:8003/api/v2/design/generate";
 
         console.log("Proxying request to Python backend:", pythonUrl);
 
@@ -32,14 +58,16 @@ export async function POST(req: Request) {
         if (!response.ok) {
             const errorText = await response.text();
             console.error("Python Backend Error:", response.status, errorText);
-            throw new Error(`AI Service Error: ${response.statusText}`);
+            return NextResponse.json(
+                { error: `AI Service Error: ${response.status} - ${errorText}` },
+                { status: response.status }
+            );
         }
 
         const data = await response.json();
 
-        // Pass the Python response directly back to Frontend
-        // Python returns: { image: { ... }, copy: { ... }, meta: { ... } }
-        // Frontend expects roughly this structure now.
+        console.log("Python response received, image size:", data.image?.data?.length || 0);
+
         return NextResponse.json(data);
 
     } catch (error: any) {

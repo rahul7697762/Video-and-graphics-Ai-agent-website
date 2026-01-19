@@ -1,0 +1,18 @@
+{
+    "id": "6ac80fd5-c928-4640-ac1c-c3a0bafac3c5",
+    "name": "Real Estate Standard Edit",
+    "modifications": {
+        "fill_color": "#ffffff",
+        "Video-8P2.source": "{{mediaUrls.mainVideo}}",
+        "Video-8P2.duration": "media",
+        "logo.source": "{{mediaUrls.mainImage}}",
+        "logo.duration": null,
+        "Shape-R4V.duration": null,
+        "price-text.text": "{{propertyType}} from {{priceLabel}}\nLimited Units",
+        "price-text.duration": null,
+        "Text-R85.duration": null,
+        "Text-V22.text": "📍 {{locality}} - {{city}}",
+        "Text-V22.duration": null,
+        "Text-V22.fill_color": "rgba(255,255,255,1)"
+    }
+}

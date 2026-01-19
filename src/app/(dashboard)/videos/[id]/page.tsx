@@ -4,9 +4,21 @@ import { useVideoStatus } from '@/hooks/use-video-status';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function VideoDetailsPage({ params }: { params: { id: string } }) {
     const { status, video } = useVideoStatus(params.id);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (status === 'pending' || (video?.meta?.template === 'CREATOMATE_EDIT' && !video?.video_url)) {
+            const interval = setInterval(() => {
+                router.refresh();
+            }, 10000);
+            return () => clearInterval(interval);
+        }
+    }, [status, video, router]);
 
     return (
         <div className="p-6 max-w-4xl mx-auto space-y-6">
